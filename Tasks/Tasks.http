@@ -1,0 +1,23 @@
+@Tasks_HostAddress = https://localhost:7239
+
+POST {{Tasks_HostAddress}}/tasks
+Content-Type: application/json
+
+{
+  "description":"do the thing",
+  "isComplete":false
+}
+###
+
+POST {{Tasks_HostAddress}}/tasks
+Content-Type: application/json
+
+{
+  "description":"cleanup the room",
+  "isComplete":false
+}
+###
+
+GET {{Tasks_HostAddress}}/tasks
+
+###
