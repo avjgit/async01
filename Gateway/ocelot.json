@@ -1,0 +1,19 @@
+{
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7248"
+  },
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/gateway/tasks",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/tasks",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7239
+        }
+      ]
+    }
+  ]
+}
