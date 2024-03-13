@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Tasks;
+using System.Text;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<TasksDb>(opt => opt.UseInMemoryDatabase("AllThePopugsTasks"));
@@ -20,6 +22,25 @@ app.MapPost("/tasks", async (Tasks.Task task, TasksDb db) =>
 {
     db.Tasks.Add(task);
     await db.SaveChangesAsync();
+    
+    var factory = new ConnectionFactory { HostName = "localhost" };
+    using var connection = factory.CreateConnection();
+    using var channel = connection.CreateModel();
+
+    channel.QueueDeclare(queue: "tasks",
+                     durable: false,
+                     exclusive: false,
+                     autoDelete: false,
+                     arguments: null);
+
+    string message = $"Task {task.Id} created for {task.Assignee}";
+    var body = Encoding.UTF8.GetBytes(message);
+
+    channel.BasicPublish(exchange: string.Empty,
+                     routingKey: "tasks",
+                     basicProperties: null,
+                     body: body);
+
     return Results.Created($"/tasks/{task.Id}", task);
 });
 

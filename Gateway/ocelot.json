@@ -20,6 +20,18 @@
       }
     },
     {
+      "UpstreamPathTemplate": "/gateway/log",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/log",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ]
+    },
+    {
       "UpstreamPathTemplate": "/gateway/auth",
       "UpstreamHttpMethod": [ "Post" ],
       "DownstreamPathTemplate": "/auth",
