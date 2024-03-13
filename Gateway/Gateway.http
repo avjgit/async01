@@ -1,9 +1,15 @@
 @Gateway_HostAddress = https://localhost:7248
 
-GET {{Gateway_HostAddress}}/weatherforecast/
+
+GET {{Gateway_HostAddress}}/gateway/tasks
 Accept: application/json
 
 ###
 
-GET {{Gateway_HostAddress}}/gateway/tasks
-Accept: application/json
+POST {{Gateway_HostAddress}}/gateway/auth
+Content-Type: application/json
+
+{
+  "Username":"user1",
+  "Password":"asdf"
+}

@@ -13,6 +13,22 @@
           "Host": "localhost",
           "Port": 7239
         }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "myauth",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/auth",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/auth",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7061
+        }
       ]
     }
   ]
