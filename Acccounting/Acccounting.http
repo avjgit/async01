@@ -1,0 +1,6 @@
+@Acccounting_HostAddress = http://localhost:5093
+
+GET {{Acccounting_HostAddress}}/log/
+Accept: application/json
+
+###

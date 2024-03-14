@@ -1,0 +1,16 @@
+@Gateway_HostAddress = https://localhost:7248
+@TOKEN=eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidXNlcjEiLCJqdGkiOiI5MzRiMDA0NS0yMDkyLTRhOWEtYTAzNS05YjkwNjE3ZjI2ODAiLCJleHAiOjE3MTAzNDUxMDd9.AeCQVkSVAk9sP9XrFys7KN3vE-QQWnO6IpKJK9HQefI
+
+GET {{Gateway_HostAddress}}/gateway/tasks
+Accept: application/json
+Authorization: Bearer {{TOKEN}}
+
+###
+
+POST {{Gateway_HostAddress}}/gateway/auth
+Content-Type: application/json
+
+{
+  "Username":"user1",
+  "Password":"asdf"
+}

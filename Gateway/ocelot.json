@@ -1,0 +1,47 @@
+{
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7248"
+  },
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/gateway/tasks",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/tasks",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7239
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "myauth",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/log",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/log",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/auth",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/auth",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7061
+        }
+      ]
+    }
+  ]
+}
