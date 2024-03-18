@@ -7,6 +7,8 @@ using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
 using Tasks;
+using static Confluent.Kafka.ConfigPropertyNames;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<TasksDb>(opt => opt.UseInMemoryDatabase("AllThePopugsTasks"));
@@ -67,14 +69,31 @@ app.MapPost("/tasks", async (Tasks.Task task, TasksDb db, IProducer<String, Task
     channel.BasicPublish(exchange: string.Empty,
                      routingKey: "tasks",
                      basicProperties: null,
-                     body: body);
+    body: body);
 
-    var result = await producer.ProduceAsync("tasksSchemed", new Message<String, Tasks.Task>
+
+    TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
+
+    producer.InitTransactions(DefaultTimeout);
+    producer.BeginTransaction();
+    try
     {
-        Value = task
-    });
 
-    producer.Flush();
+        producer.BeginTransaction();
+
+        var result = await producer.ProduceAsync("tasksSchemed", new Message<String, Tasks.Task>
+        {
+            Value = task
+        });
+        producer.CommitTransaction();
+
+        producer.Flush();
+    }
+    catch (Exception ex)
+    {
+        producer.AbortTransaction();
+    }
+
 
     return Results.Created($"/tasks/{task.Id}", task);
 });
