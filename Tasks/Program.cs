@@ -1,10 +1,40 @@
+using Confluent.Kafka;
+using Confluent.SchemaRegistry;
+using Confluent.SchemaRegistry.Serdes;
 using Microsoft.EntityFrameworkCore;
-using Tasks;
-using System.Text;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
+using System.Text;
+using System.Text.Json;
+using Tasks;
+using static Confluent.Kafka.ConfigPropertyNames;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<TasksDb>(opt => opt.UseInMemoryDatabase("AllThePopugsTasks"));
+
+var kafkaProducerConfig = builder.Services.Configure<ProducerConfig>(
+    builder.Configuration.GetSection("Kafka"));
+
+builder.Services.Configure<SchemaRegistryConfig>(
+    builder.Configuration.GetSection("SchemaRegistry"));
+
+builder.Services.AddSingleton<ISchemaRegistryClient>(sp =>
+{
+    var config = sp.GetRequiredService<IOptions<SchemaRegistryConfig>>();
+
+    return new CachedSchemaRegistryClient(config.Value);
+});
+
+builder.Services.AddSingleton<IProducer<String, Tasks.Task>>(sp =>
+{
+    var config = sp.GetRequiredService<IOptions<ProducerConfig>>();
+    var schemaRegistry = sp.GetRequiredService<ISchemaRegistryClient>();
+
+    return new ProducerBuilder<String, Tasks.Task>(config.Value)
+        .SetValueSerializer(new JsonSerializer<Tasks.Task>(schemaRegistry))
+            .Build();
+});
 
 var app = builder.Build();
 app.UseHttpsRedirection();
@@ -18,11 +48,11 @@ app.MapGet("/tasks/{id}", async (int id, TasksDb db) =>
             ? Results.Ok(task)
             : Results.NotFound());
 
-app.MapPost("/tasks", async (Tasks.Task task, TasksDb db) =>
+app.MapPost("/tasks", async (Tasks.Task task, TasksDb db, IProducer<String, Tasks.Task> producer) =>
 {
     db.Tasks.Add(task);
     await db.SaveChangesAsync();
-    
+
     var factory = new ConnectionFactory { HostName = "localhost" };
     using var connection = factory.CreateConnection();
     using var channel = connection.CreateModel();
@@ -39,7 +69,31 @@ app.MapPost("/tasks", async (Tasks.Task task, TasksDb db) =>
     channel.BasicPublish(exchange: string.Empty,
                      routingKey: "tasks",
                      basicProperties: null,
-                     body: body);
+    body: body);
+
+
+    TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
+
+    producer.InitTransactions(DefaultTimeout);
+    producer.BeginTransaction();
+    try
+    {
+
+        producer.BeginTransaction();
+
+        var result = await producer.ProduceAsync("tasksSchemed", new Message<String, Tasks.Task>
+        {
+            Value = task
+        });
+        producer.CommitTransaction();
+
+        producer.Flush();
+    }
+    catch (Exception ex)
+    {
+        producer.AbortTransaction();
+    }
+
 
     return Results.Created($"/tasks/{task.Id}", task);
 });
