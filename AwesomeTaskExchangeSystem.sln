@@ -5,11 +5,11 @@ VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tasks", "Tasks\Tasks.csproj", "{A1F1587C-3429-4ED6-9FE3-FA8C74292004}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway", "Gateway\Gateway.csproj", "{660150C4-BA34-42AF-8B56-EC2A628CE3E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gateway", "Gateway\Gateway.csproj", "{660150C4-BA34-42AF-8B56-EC2A628CE3E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth", "Auth\Auth.csproj", "{E105A1E5-A483-4522-BD12-C3EE12634BAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Auth", "Auth\Auth.csproj", "{E105A1E5-A483-4522-BD12-C3EE12634BAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acccounting", "Acccounting\Acccounting.csproj", "{628C023E-BFD9-41F7-A001-D9A09F0BE92A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Acccounting", "Acccounting\Acccounting.csproj", "{628C023E-BFD9-41F7-A001-D9A09F0BE92A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

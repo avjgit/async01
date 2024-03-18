@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "description": "Schema for popug awesome tasks system tasks",
+  "properties": {
+    "assignee": {
+      "description": "Whom task is assigned to",
+      "type": "string"
+    },
+    "description": {
+      "description": "Taks description",
+      "type": "string"
+    },
+    "id": {
+      "description": "Task ID",
+      "type": "integer"
+    },
+    "isComplete": {
+      "description": "Is task completed or not",
+      "type": "boolean"
+    }
+  },
+  "title": "PopugTask",
+  "type": "object"
+}

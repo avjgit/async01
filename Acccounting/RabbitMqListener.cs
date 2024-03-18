@@ -6,9 +6,8 @@ using Microsoft.Extensions.Hosting;
 using System.Text;
 using System.Diagnostics;
 using System;
-using Accounting;
 
-namespace Acccounting;
+namespace Accounting;
 
 public class RabbitMqListener : BackgroundService
 {
